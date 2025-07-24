@@ -20,7 +20,8 @@
 				"vscjava.vscode-java-pack",
 				"vscjava.vscode-java-debug",
 				"Oracle.oracle-java",
-				"georgewfraser.vscode-javac"
+				"georgewfraser.vscode-javac",
+				"EchoAPI.echoapi-for-vscode"
 			]
 		}
 	}
