@@ -7,4 +7,25 @@ services:
       - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=default
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/bootcamp_db
+      - SPRING_DATASOURCE_USERNAME=bootcamp_user
+      - SPRING_DATASOURCE_PASSWORD=bootcamp_password
+    depends_on:
+      - postgres
     restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres-db
+    environment:
+      POSTGRES_DB: bootcamp_db
+      POSTGRES_USER: bootcamp_user
+      POSTGRES_PASSWORD: bootcamp_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
