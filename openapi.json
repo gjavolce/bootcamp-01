@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Bootcamp 01 API",
-    "description": "Spring Boot WebFlux application with PostgreSQL and HelloWorld endpoints",
+    "description": "Spring Boot WebFlux application with PostgreSQL and User management API for personalized greeting messages",
     "version": "1.0.0",
     "contact": {
       "name": "Bojan",
