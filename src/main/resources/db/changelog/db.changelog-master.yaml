@@ -1,0 +1,174 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: bojan
+      changes:
+        - createTable:
+            tableName: hello_world_messages
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: message
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 2
+      author: copilot
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  defaultValueComputed: "gen_random_uuid()"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: username
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password_hash
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email_verified
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email_verification_token
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: email_verification_sent_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+              - column:
+                  name: failed_login_attempts
+                  type: INTEGER
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: lockout_until
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+              - column:
+                  name: deleted_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: "CURRENT_TIMESTAMP"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: "CURRENT_TIMESTAMP"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: metadata
+                  type: JSONB
+                  constraints:
+                    nullable: true
+        - sql:
+            splitStatements: false
+            stripComments: true
+            sql: |
+              ALTER TABLE users
+                ADD CONSTRAINT chk_users_username_format
+                  CHECK (username ~ '^[A-Za-z0-9_-]{3,50}$');
+        # Removed email format check constraint
+        - sql:
+            splitStatements: false
+            stripComments: true
+            sql: |
+              ALTER TABLE users
+                ADD CONSTRAINT chk_users_failed_login_attempts
+                  CHECK (failed_login_attempts >= 0 AND failed_login_attempts <= 10); 
+        - createIndex:
+            tableName: users
+            indexName: idx_users_username_not_deleted
+            unique: false
+            columns:
+              - column:
+                  name: username
+            where: "deleted_at IS NULL"
+        - createIndex:
+            tableName: users
+            indexName: idx_users_email_not_deleted
+            unique: false
+            columns:
+              - column:
+                  name: email
+            where: "deleted_at IS NULL"
+        - createIndex:
+            tableName: users
+            indexName: idx_users_auth
+            unique: false
+            columns:
+              - column:
+                  name: email
+              - column:
+                  name: password_hash
+            where: "deleted_at IS NULL"
+        - createIndex:
+            tableName: users
+            indexName: idx_users_email_verified
+            unique: false
+            columns:
+              - column:
+                  name: email_verified
+            where: "deleted_at IS NULL"
+        - createIndex:
+            tableName: users
+            indexName: idx_users_created_at
+            unique: false
+            columns:
+              - column:
+                  name: created_at
+        - createIndex:
+            tableName: users
+            indexName: idx_users_deleted_at
+            unique: false
+            columns:
+              - column:
+                  name: deleted_at
+  - include:
+      file: db/changelog/db.changelog-example-users.yaml

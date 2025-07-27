@@ -1,0 +1,320 @@
+
+openapi: 3.0.3
+info:
+  title: Bootcamp 01 API
+  description: Spring Boot WebFlux application with PostgreSQL and User endpoints
+  version: 1.0.0
+  contact:
+    name: Bojan
+    email: bojan@example.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+
+servers:
+  - url: http://localhost:8081
+    description: Development server
+
+tags:
+  - name: User
+    description: User management API
+  - name: Health
+    description: Application health check endpoints
+
+paths:
+  /api/users:
+    post:
+      tags:
+        - User
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistration'
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+    get:
+      tags:
+        - User
+      summary: Get all users
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+  /api/users/{id}:
+    get:
+      tags:
+        - User
+      summary: Get user by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+    put:
+      tags:
+        - User
+      summary: Update user by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: User updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+    delete:
+      tags:
+        - User
+      summary: Soft delete user by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: User soft deleted
+        '404':
+          description: User not found
+
+  /api/users/search:
+    get:
+      tags:
+        - User
+      summary: Search user by username or email
+      parameters:
+        - name: username
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: email
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad request
+        '404':
+          description: User not found
+
+  /health/live:
+    get:
+      tags:
+        - Health
+      summary: Liveness probe
+      description: Returns the liveness status of the application
+      responses:
+        '200':
+          description: Application is alive
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: UP
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: "2023-01-01T12:00:00Z"
+                  checks:
+                    type: object
+                    properties:
+                      application:
+                        type: string
+                        example: UP
+
+  /health/startup:
+    get:
+      tags:
+        - Health
+      summary: Startup probe
+      description: Returns the startup status of the application
+      responses:
+        '200':
+          description: Application has started successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: UP
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: "2023-01-01T12:00:00Z"
+                  message:
+                    type: string
+                    example: "Application has started successfully"
+
+  /actuator:
+    get:
+      tags:
+        - Health
+      summary: Actuator endpoints
+      description: Returns available actuator endpoints
+      responses:
+        '200':
+          description: Available actuator endpoints
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /actuator/health:
+    get:
+      tags:
+        - Health
+      summary: Health check endpoint
+      description: Returns the health status of the application
+      responses:
+        '200':
+          description: Health status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: UP
+
+components:
+  schemas:
+    UserRegistration:
+      type: object
+      description: User registration request
+      required:
+        - username
+        - email
+        - password
+      properties:
+        username:
+          type: string
+          description: Username
+          example: user_123
+        email:
+          type: string
+          description: User email
+          example: user@example.com
+        password:
+          type: string
+          description: Plaintext password
+          format: password
+    User:
+      type: object
+      description: User entity
+      required:
+        - username
+        - email
+        - passwordHash
+        - emailVerified
+        - failedLoginAttempts
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the user
+        username:
+          type: string
+          description: Username
+          example: user_123
+        email:
+          type: string
+          description: User email
+          example: user@example.com
+        passwordHash:
+          type: string
+          description: Password hash
+        emailVerified:
+          type: boolean
+          description: Is email verified
+        emailVerificationToken:
+          type: string
+          description: Email verification token
+          nullable: true
+        emailVerificationSentAt:
+          type: string
+          format: date-time
+          description: When verification email was sent
+          nullable: true
+        failedLoginAttempts:
+          type: integer
+          description: Number of failed login attempts
+        lockoutUntil:
+          type: string
+          format: date-time
+          description: Lockout expiration timestamp
+          nullable: true
+        metadata:
+          type: string
+          description: Arbitrary metadata (JSON string)
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+          description: User creation timestamp
+          nullable: true
+        updatedAt:
+          type: string
+          format: date-time
+          description: User last update timestamp
+          nullable: true
+        deletedAt:
+          type: string
+          format: date-time
+          description: User deletion timestamp (soft delete)
+          nullable: true
