@@ -31,6 +31,7 @@ class UserControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @MockBean
     private UserRepository userRepository;
 
