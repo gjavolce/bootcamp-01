@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bojan.bootcamp_01.dto.UserRegistrationDto;
+import com.bojan.bootcamp_01.dto.UserUpdateDto;
 import com.bojan.bootcamp_01.entity.User;
 import com.bojan.bootcamp_01.repository.UserRepository;
 
@@ -28,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 @Validated
 public class UserController {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @PostMapping
     public ResponseEntity<User> registerUser(@Valid @RequestBody UserRegistrationDto registrationDto) {
@@ -36,7 +39,7 @@ public class UserController {
         user.setUsername(registrationDto.getUsername());
         user.setEmail(registrationDto.getEmail());
         // You may want to hash the password here before saving
-        user.setPasswordHash(registrationDto.getPassword());
+        user.setPasswordHash(passwordEncoder.encode(registrationDto.getPassword()));
         // createdAt, updatedAt, deletedAt, etc. are handled by the system/DB
         User saved = userRepository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
@@ -61,7 +64,7 @@ public class UserController {
                     .map(ResponseEntity::ok)
                     .orElse(ResponseEntity.notFound().build());
         } else {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -71,12 +74,11 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable UUID id, @Valid @RequestBody User user) {
+    public ResponseEntity<User> updateUser(@PathVariable UUID id, @Valid @RequestBody UserUpdateDto userUpdateDto) {
         return userRepository.findById(id)
                 .map(existing -> {
-                    existing.setUsername(user.getUsername());
-                    existing.setEmail(user.getEmail());
-                    existing.setPasswordHash(user.getPasswordHash());
+                    existing.setUsername(userUpdateDto.getUsername());
+                    existing.setEmail(userUpdateDto.getEmail());
                     User updated = userRepository.save(existing);
                     return ResponseEntity.ok(updated);
                 })

@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -39,14 +40,14 @@ public class User {
     private String username;
 
     @NotNull
-    @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", flags = Pattern.Flag.CASE_INSENSITIVE, message = "Invalid email format")
+    @Email(message = "Invalid email format")
     @Schema(description = "User email", example = "user@example.com", required = true)
     @Column(name = "email", nullable = false, unique = true, length = 255)
     private String email;
 
     @NotNull
     @Schema(description = "Password hash", required = true)
-    @Column(name = "password_hash", nullable = false)
+    @Column(name = "password_hash", nullable = false, length = 255)
     private String passwordHash;
 
     @Schema(description = "Is email verified", example = "false")
@@ -88,12 +89,6 @@ public class User {
         Instant now = Instant.now();
         this.createdAt = now;
         this.updatedAt = now;
-        if (this.failedLoginAttempts == 0) {
-            this.failedLoginAttempts = 0;
-        }
-        if (this.emailVerified == false) {
-            this.emailVerified = false;
-        }
     }
 
     @PreUpdate

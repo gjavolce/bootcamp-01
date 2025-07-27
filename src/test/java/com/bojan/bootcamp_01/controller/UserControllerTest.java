@@ -15,11 +15,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import com.bojan.bootcamp_01.dto.UserRegistrationDto;
 import com.bojan.bootcamp_01.entity.User;
 import com.bojan.bootcamp_01.repository.UserRepository;
+import org.springframework.context.annotation.Import;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.bojan.bootcamp_01.config.SecurityConfig;
 
 @WebMvcTest(UserController.class)
+@Import(SecurityConfig.class)
 class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -31,11 +35,16 @@ class UserControllerTest {
     private UserRepository userRepository;
 
     private User user;
+    private UserRegistrationDto userRegistrationDto;
 
     @BeforeEach
     void setUp() {
         user = new User(null, "testuser", "test@example.com", "hash", false, null, null, 0, null, null, null, null,
                 null);
+        userRegistrationDto = new UserRegistrationDto();
+        userRegistrationDto.setUsername("testuser");
+        userRegistrationDto.setEmail("test@example.com");
+        userRegistrationDto.setPassword("password");
     }
 
     @Test
@@ -43,7 +52,7 @@ class UserControllerTest {
         Mockito.when(userRepository.save(any(User.class))).thenReturn(user);
         mockMvc.perform(MockMvcRequestBuilders.post("/api/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(user)))
+                .content(objectMapper.writeValueAsString(userRegistrationDto)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.username").value("testuser"));
     }
