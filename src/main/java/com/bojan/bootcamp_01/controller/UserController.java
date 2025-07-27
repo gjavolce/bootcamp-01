@@ -75,6 +75,19 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable UUID id, @Valid @RequestBody UserUpdateDto userUpdateDto) {
+        if (userUpdateDto.getUsername() == null || userUpdateDto.getEmail() == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        if (userRepository.findByUsername(userUpdateDto.getUsername()).isPresent() &&
+            !userRepository.findByUsername(userUpdateDto.getUsername()).get().getId().equals(id)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+        }
+
+        if (userRepository.findByEmail(userUpdateDto.getEmail()).isPresent() &&
+            !userRepository.findByEmail(userUpdateDto.getEmail()).get().getId().equals(id)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+        }
         return userRepository.findById(id)
                 .map(existing -> {
                     existing.setUsername(userUpdateDto.getUsername());
