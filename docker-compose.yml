@@ -22,7 +22,7 @@ services:
       POSTGRES_USER: bootcamp_user
       POSTGRES_PASSWORD: bootcamp_password
     ports:
-      - "5433:5432"
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped

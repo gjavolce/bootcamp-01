@@ -1,0 +1,85 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: copilot
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: id, valueComputed: "gen_random_uuid()" }
+              - column: { name: username, value: "user1" }
+              - column: { name: email, value: "user1@example.com" }
+              - column: { name: password_hash, value: "hash1" }
+              - column: { name: email_verified, valueBoolean: false }
+              - column: { name: email_verification_token, value: null }
+              - column: { name: email_verification_sent_at, value: null }
+              - column: { name: failed_login_attempts, valueNumeric: 0 }
+              - column: { name: lockout_until, value: null }
+              - column: { name: deleted_at, value: null }
+              - column: { name: created_at, value: "2025-01-01" }
+              - column: { name: updated_at, value: "2025-01-01" }
+              - column: { name: metadata, value: null }
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: id, valueComputed: "gen_random_uuid()" }
+              - column: { name: username, value: "user2" }
+              - column: { name: email, value: "user2@example.com" }
+              - column: { name: password_hash, value: "hash2" }
+              - column: { name: email_verified, valueBoolean: false }
+              - column: { name: email_verification_token, value: null }
+              - column: { name: email_verification_sent_at, value: null }
+              - column: { name: failed_login_attempts, valueNumeric: 0 }
+              - column: { name: lockout_until, value: null }
+              - column: { name: deleted_at, value: null }
+              - column: { name: created_at, value: "2025-01-01" }
+              - column: { name: updated_at, value: "2025-01-01" }
+              - column: { name: metadata, value: null }
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: id, valueComputed: "gen_random_uuid()" }
+              - column: { name: username, value: "user3" }
+              - column: { name: email, value: "user3@example.com" }
+              - column: { name: password_hash, value: "hash3" }
+              - column: { name: email_verified, valueBoolean: false }
+              - column: { name: email_verification_token, value: null }
+              - column: { name: email_verification_sent_at, value: null }
+              - column: { name: failed_login_attempts, valueNumeric: 0 }
+              - column: { name: lockout_until, value: null }
+              - column: { name: deleted_at, value: null }
+              - column: { name: created_at, value: "2025-01-01" }
+              - column: { name: updated_at, value: "2025-01-01" }
+              - column: { name: metadata, value: null }
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: id, valueComputed: "gen_random_uuid()" }
+              - column: { name: username, value: "user4" }
+              - column: { name: email, value: "user4@example.com" }
+              - column: { name: password_hash, value: "hash4" }
+              - column: { name: email_verified, valueBoolean: false }
+              - column: { name: email_verification_token, value: null }
+              - column: { name: email_verification_sent_at, value: null }
+              - column: { name: failed_login_attempts, valueNumeric: 0 }
+              - column: { name: lockout_until, value: null }
+              - column: { name: deleted_at, value: null }
+              - column: { name: created_at, value: "2025-01-01" }
+              - column: { name: updated_at, value: "2025-01-01" }
+              - column: { name: metadata, value: null }
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: id, valueComputed: "gen_random_uuid()" }
+              - column: { name: username, value: "user5" }
+              - column: { name: email, value: "user5@example.com" }
+              - column: { name: password_hash, value: "hash5" }
+              - column: { name: email_verified, valueBoolean: false }
+              - column: { name: email_verification_token, value: null }
+              - column: { name: email_verification_sent_at, value: null }
+              - column: { name: failed_login_attempts, valueNumeric: 0 }
+              - column: { name: lockout_until, value: null }
+              - column: { name: deleted_at, value: null }
+              - column: { name: created_at, value: "2025-01-01" }
+              - column: { name: updated_at, value: "2025-01-01" }
+              - column: { name: metadata, value: null }
