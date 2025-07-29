@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: seed-roles-users
+      author: copilot
+      changes:
+        - sql:
+            splitStatements: true
+            stripComments: true
+            sql: |
+              -- Insert roles
+              INSERT INTO roles (id, name) VALUES
+                ('00000000-0000-0000-0000-000000000001', 'admin'),
+                ('00000000-0000-0000-0000-000000000002', 'user'),
+                ('00000000-0000-0000-0000-000000000003', 'moderator');
+
+              -- Insert users
+              INSERT INTO users (id, username, email, password_hash, email_verified, failed_login_attempts, created_at, updated_at)
+                VALUES
+                ('10000000-0000-0000-0000-000000000001', 'user1', 'user1@example.com', 'hash1', true, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                ('10000000-0000-0000-0000-000000000002', 'user2', 'user2@example.com', 'hash2', true, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                ('10000000-0000-0000-0000-000000000003', 'user3', 'user3@example.com', 'hash3', true, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+              -- Connect users to roles
+              INSERT INTO user_roles (user_id, role_id) VALUES
+                ('10000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000001'), -- user1 is admin
+                ('10000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000002'), -- user2 is user
+                ('10000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000002'); -- user3 is user

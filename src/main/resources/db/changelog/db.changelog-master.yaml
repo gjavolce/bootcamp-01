@@ -1,36 +1,6 @@
 databaseChangeLog:
   - changeSet:
       id: 1
-      author: bojan
-      changes:
-        - createTable:
-            tableName: hello_world_messages
-            columns:
-              - column:
-                  name: id
-                  type: BIGINT
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: name
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: message
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: created_at
-                  type: TIMESTAMP
-                  constraints:
-                    nullable: false
-
-  - changeSet:
-      id: 2
       author: copilot
       changes:
         - createTable:
@@ -107,6 +77,53 @@ databaseChangeLog:
                   type: JSONB
                   constraints:
                     nullable: true
+        - createTable:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  defaultValueComputed: "gen_random_uuid()"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+        - createTable:
+            tableName: user_roles
+            columns:
+              - column:
+                  name: user_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: user_roles
+            columnNames: user_id, role_id
+            constraintName: pk_user_roles
+        - addForeignKeyConstraint:
+            baseTableName: user_roles
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_user_roles_user
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: user_roles
+            baseColumnNames: role_id
+            referencedTableName: roles
+            referencedColumnNames: id
+            constraintName: fk_user_roles_role
+            onDelete: CASCADE
         - sql:
             splitStatements: false
             stripComments: true
@@ -114,7 +131,6 @@ databaseChangeLog:
               ALTER TABLE users
                 ADD CONSTRAINT chk_users_username_format
                   CHECK (username ~ '^[A-Za-z0-9_-]{3,50}$');
-        # Removed email format check constraint
         - sql:
             splitStatements: false
             stripComments: true
@@ -171,4 +187,4 @@ databaseChangeLog:
               - column:
                   name: deleted_at
   - include:
-      file: db/changelog/db.changelog-example-users.yaml
+      file: db/changelog/db.changelog-seed-users-and-roles.yaml
