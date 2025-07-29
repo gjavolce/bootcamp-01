@@ -74,7 +74,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: metadata
-                  type: JSONB
+                  type: VARCHAR(1000)
                   constraints:
                     nullable: true
         - createTable:

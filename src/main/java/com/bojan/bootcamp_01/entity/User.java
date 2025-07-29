@@ -1,6 +1,7 @@
 package com.bojan.bootcamp_01.entity;
 
 import java.time.Instant;
+import java.util.Set;
 import java.util.UUID;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -8,6 +9,9 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -99,4 +103,27 @@ public class User {
     @Schema(description = "Flexible metadata as JSONB")
     @Column(name = "metadata")
     private String metadata;
+
+    @ManyToMany
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
+
+    public User(UUID id, String username, String email, String passwordHash, boolean emailVerified,
+            String emailVerificationToken, Instant emailVerificationSentAt, int failedLoginAttempts,
+            Instant lockoutUntil, Instant deletedAt, Instant createdAt, Instant updatedAt, String metadata) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.passwordHash = passwordHash;
+        this.emailVerified = emailVerified;
+        this.emailVerificationToken = emailVerificationToken;
+        this.emailVerificationSentAt = emailVerificationSentAt;
+        this.failedLoginAttempts = failedLoginAttempts;
+        this.lockoutUntil = lockoutUntil;
+        this.deletedAt = deletedAt;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.metadata = metadata;
+        this.roles = null;
+    }
 }
