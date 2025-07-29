@@ -18,6 +18,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.bojan.bootcamp_01.dto.UserRegistrationDto;
 import com.bojan.bootcamp_01.entity.User;
 import com.bojan.bootcamp_01.repository.UserRepository;
+import com.bojan.bootcamp_01.service.UserService;
+
 import org.springframework.context.annotation.Import;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.bojan.bootcamp_01.config.SecurityConfig;
@@ -34,6 +36,8 @@ class UserControllerTest {
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @MockBean
     private UserRepository userRepository;
+    @MockBean
+    private UserService userService;
 
     private User user;
     private UserRegistrationDto userRegistrationDto;

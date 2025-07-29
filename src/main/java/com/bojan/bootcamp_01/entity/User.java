@@ -124,6 +124,6 @@ public class User {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.metadata = metadata;
-        this.roles = null;
+        this.roles = new java.util.HashSet<>();
     }
 }
