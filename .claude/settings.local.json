@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(mvn test-compile:*)",
+      "Bash(mvn test:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(ls:*)",
+      "Bash(mkdir:*)"
+    ]
+  },
+  "enableAllProjectMcpServers": false
+}
